@@ -10,19 +10,23 @@ echo ""
 # Check if opencode is installed
 if ! command -v opencode &> /dev/null; then
     echo "ERROR: opencode not found in PATH"
-    echo "Install: npm i -g @anthropics/opencode"
+    echo "Install: npm install -g opencode-ai"
     exit 1
 fi
 
 echo "OpenCode: $(opencode --version 2>/dev/null || echo 'installed')"
 
 # Check oh-my-opencode
-if command -v npx &> /dev/null; then
+if command -v bunx &> /dev/null; then
     echo "Running oh-my-opencode doctor..."
+    echo ""
+    bunx oh-my-opencode doctor ${1:+"$1"}
+elif command -v npx &> /dev/null; then
+    echo "Running oh-my-opencode doctor (via npx)..."
     echo ""
     npx oh-my-opencode doctor ${1:+"$1"}
 else
-    echo "WARNING: npx not found. Install Node.js to run oh-my-opencode doctor."
+    echo "WARNING: bunx/npx not found. Install Bun or Node.js to run oh-my-opencode doctor."
     echo ""
     
     # Manual checks

@@ -12,11 +12,11 @@ Use **bash with PTY + background mode** for all OpenCode tasks. The plugin provi
 
 This skill assumes OpenCode and oh-my-opencode are already properly configured with your preferred model providers (API keys and/or OAuth). Configure these before using the skill:
 
-1. **Install OpenCode:** `npm i -g @anthropics/opencode`
-2. **Configure providers:** `opencode auth login` (for OAuth) or set env vars (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, etc.)
+1. **Install OpenCode:** `npm install -g opencode-ai` (or `curl -fsSL https://opencode.ai/install | bash`)
+2. **Configure providers:** `opencode auth login` (CLI OAuth) or `/connect` (TUI alternative), or set env vars (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, etc.)
 3. **Install oh-my-opencode plugin:** Add `"plugin": ["oh-my-opencode@latest"]` to your `opencode.json`
-4. **Configure models (optional):** Run `npx oh-my-opencode install` or edit `~/.config/opencode/oh-my-opencode.json`
-5. **Verify:** Run `npx oh-my-opencode doctor --verbose` to check model resolution
+4. **Configure models (optional):** Run `bunx oh-my-opencode install` or edit `~/.config/opencode/oh-my-opencode.json`
+5. **Verify:** Run `bunx oh-my-opencode doctor --verbose` to check model resolution
 
 ## PTY Required
 
@@ -71,17 +71,22 @@ Invoke specialized agents directly in prompts. Models are configured via `oh-my-
 
 | Agent | Default Purpose |
 |-------|-----------------|
-| `@oracle` | Architecture decisions, debugging, code review (read-only) |
-| `@librarian` | Documentation lookup, OSS examples, multi-repo analysis |
-| `@explore` | Fast codebase grep, pattern finding |
-| `Metis` | Pre-planning analysis, identifies hidden requirements |
-| `Momus` | Plan review and critique |
-| `Atlas` | General purpose sub-agent |
+| oracle | Architecture decisions, debugging, code review (read-only) |
+| librarian | Documentation lookup, OSS examples, multi-repo analysis |
+| explore | Fast codebase grep, pattern finding |
+| Metis | Pre-planning analysis, identifies hidden requirements |
+| Momus | Plan review and critique |
+| Atlas | General purpose sub-agent |
+| Hephaestus | Autonomous deep worker via `deep` category (GPT 5.2 Codex) |
+
+Agents are invoked programmatically by Sisyphus via `delegate_task()`. You can also use the `--agent` CLI flag:
 
 ```bash
-opencode run "Ask @oracle to review this authentication design"
-opencode run "Ask @librarian how NextAuth implements session refresh"
+opencode run --agent oracle "Review this authentication design"
+opencode run --agent librarian "How does NextAuth implement session refresh?"
 ```
+
+> **Note:** Within the TUI, Sisyphus automatically delegates to agents. The `@` prefix in natural language (e.g., "ask @oracle") may work as a hint but is not an official invocation mechanism — use `--agent` for CLI or let Sisyphus delegate internally.
 
 ---
 
@@ -93,13 +98,14 @@ When the agent delegates subtasks, it uses categories. Each category has optimal
 |----------|---------|
 | `visual-engineering` | Frontend, UI/UX, styling, animation |
 | `ultrabrain` | Deep logical reasoning, complex architecture |
+| `deep` | Goal-oriented autonomous problem-solving (Hephaestus agent) |
 | `artistry` | Creative/artistic tasks, novel ideas |
 | `quick` | Trivial fixes, typos, single file changes |
 | `unspecified-low` | General tasks, low effort required |
 | `unspecified-high` | General tasks, high effort required |
 | `writing` | Documentation, prose, technical writing |
 
-**Important:** Categories only use their optimal defaults if configured in `oh-my-opencode.json`. Without configuration, all categories fall back to the system default model. Run `npx oh-my-opencode doctor --verbose` to check resolution.
+**Important:** Categories only use their optimal defaults if configured in `oh-my-opencode.json`. Without configuration, all categories fall back to the system default model. Run `bunx oh-my-opencode doctor --verbose` to check resolution.
 
 ---
 
@@ -168,10 +174,10 @@ opencode run "ulw Continue the previous task" -c
 opencode run "ulw Refactor based on spec" --file ~/docs/spec.md
 
 # Check model resolution
-npx oh-my-opencode doctor --verbose
+bunx oh-my-opencode doctor --verbose
 
 # Interactive installer
-npx oh-my-opencode install
+bunx oh-my-opencode install
 ```
 
 **Do NOT use:** `--format json` or `--model` flags. The plugin handles model selection.
