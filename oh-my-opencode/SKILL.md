@@ -89,7 +89,7 @@ When the agent delegates subtasks, it uses categories. Each category has optimal
 | `unspecified-high` | General tasks, high effort required |
 | `writing` | Documentation, prose, technical writing |
 
-**Important:** Categories only use their optimal defaults if configured in `oh-my-opencode.json`. Without configuration, all categories fall back to the system default model. Run `bunx oh-my-opencode doctor --verbose` to check resolution.
+**Important:** Categories only use their optimal defaults if configured in `oh-my-opencode.json`. Without configuration, all categories fall back to the system default model. Run `npx oh-my-opencode doctor --verbose` to check resolution.
 
 ---
 
@@ -158,10 +158,10 @@ opencode run "ulw Continue the previous task" -c
 opencode run "ulw Refactor based on spec" --file ~/docs/spec.md
 
 # Check model resolution
-bunx oh-my-opencode doctor --verbose
+npx oh-my-opencode doctor --verbose
 
 # Interactive installer
-bunx oh-my-opencode install
+npx oh-my-opencode install
 ```
 
 **Do NOT use:** `--format json` or `--model` flags. The plugin handles model selection.

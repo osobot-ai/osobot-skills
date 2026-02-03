@@ -25,7 +25,7 @@ bash pty:true workdir:~/project background:true command:"opencode run 'ulw ...'"
 }
 ```
 
-**Verify:** Run `bunx oh-my-opencode doctor --verbose` to check model resolution.
+**Verify:** Run `npx oh-my-opencode doctor --verbose` to check model resolution.
 
 ### Agent stuck in loop
 
@@ -107,7 +107,7 @@ opencode run "ulw Continue the previous task" -c
 
 ```bash
 # Check model resolution and configuration
-bunx oh-my-opencode doctor --verbose
+npx oh-my-opencode doctor --verbose
 
 # Check available models
 opencode models

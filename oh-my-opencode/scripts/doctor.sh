@@ -17,12 +17,12 @@ fi
 echo "OpenCode: $(opencode --version 2>/dev/null || echo 'installed')"
 
 # Check oh-my-opencode
-if command -v bunx &> /dev/null; then
+if command -v npx &> /dev/null; then
     echo "Running oh-my-opencode doctor..."
     echo ""
-    bunx oh-my-opencode doctor ${1:+"$1"}
+    npx oh-my-opencode doctor ${1:+"$1"}
 else
-    echo "WARNING: bunx not found. Install bun to run oh-my-opencode doctor."
+    echo "WARNING: npx not found. Install Node.js to run oh-my-opencode doctor."
     echo ""
     
     # Manual checks

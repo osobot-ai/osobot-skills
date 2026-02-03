@@ -13,7 +13,7 @@ Supports JSONC (comments + trailing commas). Use `.jsonc` extension for explicit
 Most users don't need manual config. Run the interactive installer:
 
 ```bash
-bunx oh-my-opencode install
+npx oh-my-opencode install
 ```
 
 ## Schema
@@ -149,7 +149,7 @@ Only configure categories for providers you have access to. Unconfigured categor
 2. **Provider fallback chain** for the agent/category
 3. **System default** from opencode.json (lowest)
 
-Check resolution with: `bunx oh-my-opencode doctor --verbose`
+Check resolution with: `npx oh-my-opencode doctor --verbose`
 
 ## Sisyphus Agent
 
