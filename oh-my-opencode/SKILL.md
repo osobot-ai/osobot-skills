@@ -8,15 +8,15 @@ metadata: {"openclaw":{"emoji":"🪨","homepage":"https://github.com/code-yeongy
 
 Use **bash with PTY + background mode** for all OpenCode tasks. The plugin provides autonomous execution until completion.
 
-## ⚠️ PTY Required
+## PTY Required
 
-OpenCode is interactive — always use `pty:true`:
+OpenCode is interactive. Always use `pty:true`:
 
 ```bash
-# ✅ Correct
+# Correct
 bash pty:true workdir:~/project background:true command:"opencode run 'ulw Build a REST API'"
 
-# ❌ Wrong - may hang or break
+# Wrong - may hang or break
 bash workdir:~/project background:true command:"opencode run 'ulw Build a REST API'"
 ```
 
@@ -24,7 +24,7 @@ bash workdir:~/project background:true command:"opencode run 'ulw Build a REST A
 
 ## Two Workflow Modes
 
-### Mode 1: Ultrawork (Quick — Just Do It)
+### Mode 1: Ultrawork (Quick)
 
 Include `ultrawork` or `ulw` in your prompt. Agent handles everything automatically.
 
@@ -32,9 +32,9 @@ Include `ultrawork` or `ulw` in your prompt. Agent handles everything automatica
 bash pty:true workdir:~/project background:true command:"opencode run 'ulw Add authentication with JWT and refresh tokens'"
 ```
 
-**What happens:** Agent explores codebase → researches patterns → implements → verifies → keeps working until done.
+**What happens:** Agent explores codebase, researches patterns, implements, verifies, and keeps working until done.
 
-### Mode 2: Prometheus (Precise — Planned Execution)
+### Mode 2: Prometheus (Planned Execution)
 
 For complex/critical tasks. Creates a detailed plan through interview, then executes systematically.
 
@@ -43,7 +43,7 @@ For complex/critical tasks. Creates a detailed plan through interview, then exec
 bash pty:true workdir:~/project command:"opencode"
 # Then press Tab to enter Prometheus mode
 
-# 2. Describe work → Prometheus interviews you
+# 2. Describe work - Prometheus interviews you
 # 3. Review plan in .sisyphus/plans/*.md
 # 4. Run /start-work to execute
 ```
@@ -52,6 +52,44 @@ bash pty:true workdir:~/project command:"opencode"
 - Multi-day projects
 - Critical production changes
 - Complex refactoring spanning many files
+
+---
+
+## Built-in Agents
+
+Invoke specialized agents directly in prompts. Models are configured via `oh-my-opencode.json`, not hardcoded here. See [Configuration Reference](./references/configuration.md) for details.
+
+| Agent | Default Purpose |
+|-------|-----------------|
+| `@oracle` | Architecture decisions, debugging, code review (read-only) |
+| `@librarian` | Documentation lookup, OSS examples, multi-repo analysis |
+| `@explore` | Fast codebase grep, pattern finding |
+| `Metis` | Pre-planning analysis, identifies hidden requirements |
+| `Momus` | Plan review and critique |
+| `Atlas` | General purpose sub-agent |
+
+```bash
+opencode run "Ask @oracle to review this authentication design"
+opencode run "Ask @librarian how NextAuth implements session refresh"
+```
+
+---
+
+## Categories (for delegate_task)
+
+When the agent delegates subtasks, it uses categories. Each category has optimal model defaults configured in `oh-my-opencode.json`. See [Configuration Reference](./references/configuration.md#categories) for model setup.
+
+| Category | Use For |
+|----------|---------|
+| `visual-engineering` | Frontend, UI/UX, styling, animation |
+| `ultrabrain` | Deep logical reasoning, complex architecture |
+| `artistry` | Creative/artistic tasks, novel ideas |
+| `quick` | Trivial fixes, typos, single file changes |
+| `unspecified-low` | General tasks, low effort required |
+| `unspecified-high` | General tasks, high effort required |
+| `writing` | Documentation, prose, technical writing |
+
+**Important:** Categories only use their optimal defaults if configured in `oh-my-opencode.json`. Without configuration, all categories fall back to the system default model. Run `bunx oh-my-opencode doctor --verbose` to check resolution.
 
 ---
 
@@ -72,37 +110,6 @@ process action:write sessionId:XXX data:"yes"
 # Kill if stuck
 process action:kill sessionId:XXX
 ```
-
----
-
-## Built-in Agents
-
-Invoke specialized agents directly in prompts:
-
-| Agent | Model | Use For |
-|-------|-------|---------|
-| `@oracle` | GPT-5.2 | Architecture decisions, debugging, code review (read-only) |
-| `@librarian` | GLM-4.7 | Documentation lookup, OSS examples, multi-repo analysis |
-| `@explore` | Haiku 4.5 | Fast codebase grep, pattern finding |
-
-```bash
-opencode run "Ask @oracle to review this authentication design"
-opencode run "Ask @librarian how NextAuth implements session refresh"
-```
-
----
-
-## Categories (for delegate_task)
-
-When the agent delegates subtasks, it uses categories:
-
-| Category | Model | Use For |
-|----------|-------|---------|
-| `visual-engineering` | Gemini 3 Pro | Frontend, UI/UX, styling |
-| `ultrabrain` | GPT-5.2 | Deep reasoning, architecture |
-| `quick` | Haiku 4.5 | Trivial fixes, typos |
-| `unspecified-low` | Sonnet 4.5 | General tasks, low effort |
-| `unspecified-high` | Opus 4.5 | General tasks, high effort |
 
 ---
 
@@ -149,19 +156,26 @@ opencode run "ulw Continue the previous task" -c
 
 # Attach files for context
 opencode run "ulw Refactor based on spec" --file ~/docs/spec.md
+
+# Check model resolution
+bunx oh-my-opencode doctor --verbose
+
+# Interactive installer
+bunx oh-my-opencode install
 ```
 
-**Do NOT use:** `--format json` or `--model` flags — plugin handles these.
+**Do NOT use:** `--format json` or `--model` flags. The plugin handles model selection.
 
 ---
 
 ## Best Practices
 
 1. **Always include `ulw`** for autonomous mode
-2. **Be specific** — include file paths, requirements, constraints
-3. **Let Sisyphus finish** — complex builds take time (10-60+ min)
-4. **Use workdir** — keeps context focused on target project
-5. **Verify before reporting** — check `process action:log` output
+2. **Be specific** with file paths, requirements, constraints
+3. **Let Sisyphus finish** - complex builds take time (10-60+ min)
+4. **Use workdir** to keep context focused on target project
+5. **Verify before reporting** - check `process action:log` output
+6. **Configure categories** in `oh-my-opencode.json` to get optimal models per task type
 
 ---
 
@@ -182,12 +196,12 @@ opencode run "ulw Refactor based on spec" --file ~/docs/spec.md
 
 ## Rules
 
-1. **Always use pty:true** — OpenCode needs a terminal
-2. **Always use background mode** — tasks can run 10-60+ min
-3. **Respect tool choice** — if user asks for OpenCode, use it
-4. **Be patient** — don't kill sessions because they're "slow"
-5. **NEVER run in bot's own directory** — use target project or temp workspace
-6. **Check before confirming** — verify output before telling user it's done
+1. **Always use pty:true** - OpenCode needs a terminal
+2. **Always use background mode** - tasks can run 10-60+ min
+3. **Respect tool choice** - if user asks for OpenCode, use it
+4. **Be patient** - don't kill sessions because they're "slow"
+5. **NEVER run in bot's own directory** - use target project or temp workspace
+6. **Check before confirming** - verify output before telling user it's done
 
 ---
 
@@ -200,3 +214,10 @@ bash pty:true workdir:~/project background:true command:"opencode run 'ulw Build
 
 When completely finished, run: openclaw gateway wake --text \"Done: Built todo app\" --mode now'"
 ```
+
+---
+
+## Reference Docs
+
+- [Configuration Reference](./references/configuration.md) - Full config options, agents, categories, model resolution
+- [Troubleshooting](./references/troubleshooting.md) - Common issues and fixes
