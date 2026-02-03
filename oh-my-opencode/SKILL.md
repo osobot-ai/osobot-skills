@@ -8,6 +8,16 @@ metadata: {"openclaw":{"emoji":"🪨","homepage":"https://github.com/code-yeongy
 
 Use **bash with PTY + background mode** for all OpenCode tasks. The plugin provides autonomous execution until completion.
 
+## Prerequisites
+
+This skill assumes OpenCode and oh-my-opencode are already properly configured with your preferred model providers (API keys and/or OAuth). Configure these before using the skill:
+
+1. **Install OpenCode:** `npm i -g @anthropics/opencode`
+2. **Configure providers:** `opencode auth login` (for OAuth) or set env vars (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, etc.)
+3. **Install oh-my-opencode plugin:** Add `"plugin": ["oh-my-opencode@latest"]` to your `opencode.json`
+4. **Configure models (optional):** Run `npx oh-my-opencode install` or edit `~/.config/opencode/oh-my-opencode.json`
+5. **Verify:** Run `npx oh-my-opencode doctor --verbose` to check model resolution
+
 ## PTY Required
 
 OpenCode is interactive. Always use `pty:true`:
